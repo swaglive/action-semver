@@ -8,7 +8,7 @@ inputs:
   pattern:
     description: Semver pattern string
     required: true
-    default: ^v?(?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<patch>[0-9]+)(?:\-(?P<prerelease>\w+))?$
+    default: ^v?(?P<major>[0-9]+)(?:\.(?P<minor>[0-9]+))?(?:\.(?P<patch>[0-9]+))?(?:\-(?P<prerelease>[\w-]+))?(?:\+(?P<build>[\w-]+))?$
 outputs:
   version:
     description: The full matched version string
@@ -25,6 +25,9 @@ outputs:
   prerelease:
     description: Semver prerelease version
     value: ${{ steps.semver.outputs.prerelease }}
+  build:
+    description: Semver build version
+    value: ${{ steps.semver.outputs.build }}
 runs:
   using: composite
   steps:
