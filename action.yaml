@@ -41,4 +41,7 @@ runs:
           print(f'::set-output name=version::{matched.string}')
 
           for key, value in matched.groupdict().items():
+            if not value:
+              continue
+
             print(f'::set-output name={key}::{value}')
