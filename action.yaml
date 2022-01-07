@@ -1,0 +1,44 @@
+name: Semver
+description: Generate semver
+inputs:
+  input:
+    description: Input to match the pattern on
+    required: true
+    default: ${{ github.ref_name }}
+  pattern:
+    description: Semver pattern string
+    required: true
+    default: ^v?(?P<major>[0-9]+)\.(?P<minor>[0-9]+)\.(?P<patch>[0-9]+)(?:\-(?P<prerelease>\w+))?$
+outputs:
+  version:
+    description: The full matched version string
+    value: ${{ steps.semver.outputs.version }}
+  major:
+    description: Semver major version
+    value: ${{ steps.semver.outputs.major }}
+  minor:
+    description: Semver minor version
+    value: ${{ steps.semver.outputs.minor }}
+  patch:
+    description: Semver patch version
+    value: ${{ steps.semver.outputs.patch }}
+  prerelease:
+    description: Semver prerelease version
+    value: ${{ steps.semver.outputs.prerelease }}
+runs:
+  using: composite
+  steps:
+  - shell: python
+    id: semver
+    run: |
+      import re
+
+
+      input = '${{ inputs.input }}'
+      pattern = re.compile('${{ inputs.pattern }}')
+
+      if matched := pattern.match(input):
+          print(f'::set-output name=version::{matched.string}')
+
+          for key, value in matched.groupdict().items():
+            print(f'::set-output name={key}::{value}')
