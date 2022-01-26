@@ -45,7 +45,7 @@ runs:
 
       if matched := pattern.match(input):
           groupdict = matched.groupdict()
-          print(f'::set-output name=json::{json.dumps(groupdict})')
+          print(f'::set-output name=json::{json.dumps(groupdict)}')
           print(f'::set-output name=version::{matched.string}')
 
           for key, value in groupdict.items():
