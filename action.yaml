@@ -44,10 +44,11 @@ runs:
       pattern = re.compile('${{ inputs.pattern }}')
 
       if matched := pattern.match(input):
-          print(f'::set-output name=json::{json.dumps(matched.groupdict()})')
+          groupdict = matched.groupdict()
+          print(f'::set-output name=json::{json.dumps(groupdict})')
           print(f'::set-output name=version::{matched.string}')
 
-          for key, value in matched.groupdict().items():
+          for key, value in groupdict.items():
             if not value:
               continue
 
