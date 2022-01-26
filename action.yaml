@@ -28,6 +28,9 @@ outputs:
   build:
     description: Semver build version
     value: ${{ steps.semver.outputs.build }}
+  json:
+    description: Semver build version
+    value: ${{ steps.semver.outputs.json }}
 runs:
   using: composite
   steps:
@@ -35,12 +38,13 @@ runs:
     id: semver
     run: |
       import re
-
+      import json
 
       input = '${{ inputs.input }}'
       pattern = re.compile('${{ inputs.pattern }}')
 
       if matched := pattern.match(input):
+          print(f'::set-output name=json::{json.dumps(matched.groupdict()})')
           print(f'::set-output name=version::{matched.string}')
 
           for key, value in matched.groupdict().items():
@@ -48,3 +52,8 @@ runs:
               continue
 
             print(f'::set-output name={key}::{value}')
+  - shell: bash
+    run: |
+      echo "::group::Output"
+      yq e -P <<< '${{ steps.semver.outputs.json }}'
+      echo "::endgroup::"
