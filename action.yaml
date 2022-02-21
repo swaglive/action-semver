@@ -42,8 +42,9 @@ runs:
 
       input = '${{ inputs.input }}'
       pattern = re.compile('${{ inputs.pattern }}')
+      matched = pattern.match(input)
 
-      if matched := pattern.match(input):
+      if matched:
           groupdict = matched.groupdict()
           print(f'::set-output name=json::{json.dumps(groupdict)}')
           print(f'::set-output name=version::{matched.string}')
