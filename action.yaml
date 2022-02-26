@@ -54,8 +54,3 @@ runs:
               continue
 
             print('::set-output name={key}::{value}'.format(key=key, value=value))
-  - shell: bash
-    run: |
-      echo "::group::Output"
-      yq e -P <<< '${{ steps.semver.outputs.json }}'
-      echo "::endgroup::"
