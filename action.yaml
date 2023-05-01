@@ -38,6 +38,7 @@ runs:
     id: semver
     run: |
       import re
+      import os
       import json
 
       input = '${{ inputs.input }}'
@@ -46,14 +47,16 @@ runs:
 
       if matched:
           groupdict = matched.groupdict()
-          print('::set-output name=json::{}'.format(json.dumps(groupdict)))
-          print('::set-output name=version::{}'.format(matched.string))
+
+          with open(os.environ['GITHUB_OUTPUT'], 'w') as fp:
+            print('json={}'.format(json.dumps(groupdict)), file=fp)
+            print('version={}'.format(matched.string), file=fp)
 
           for key, value in groupdict.items():
             if not value:
               continue
 
-            print('::set-output name={key}::{value}'.format(key=key, value=value))
+            print('{key}={value}'.format(key=key, value=value), file=fp)
   - shell: bash
     run: |
       echo "::group::Output"
