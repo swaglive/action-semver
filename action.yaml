@@ -52,11 +52,11 @@ runs:
             print('json={}'.format(json.dumps(groupdict)), file=fp)
             print('version={}'.format(matched.string), file=fp)
 
-          for key, value in groupdict.items():
-            if not value:
-              continue
+            for key, value in groupdict.items():
+              if not value:
+                continue
 
-            print('{key}={value}'.format(key=key, value=value), file=fp)
+              print('{key}={value}'.format(key=key, value=value), file=fp)
   - shell: bash
     run: |
       echo "::group::Output"
