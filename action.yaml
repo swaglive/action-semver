@@ -49,7 +49,7 @@ runs:
       if matched:
           groupdict = matched.groupdict()
 
-          with open(os.environ['GITHUB_OUTPUT'], 'w') as fp:
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as fp:
               print('json={}'.format(json.dumps(groupdict)), file=fp)
               print('version={}'.format(matched.string), file=fp)
 
