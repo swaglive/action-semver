@@ -1,65 +1,56 @@
 name: Semver
 description: Generate semver
 inputs:
-  input:
-    description: Input to match the pattern on
+  value:
+    description: Value to match the pattern on
     required: true
     default: ${{ github.ref_name }}
-  pattern:
-    description: Semver pattern string
-    required: true
-    default: ^v?(?P<major>[0-9]+)(?:\.(?P<minor>[0-9]+))?(?:\.(?P<patch>[0-9]+))?(?:\-(?P<prerelease>[\w-]+))?(?:\+(?P<build>[\w-]+))?$
 outputs:
   version:
     description: The full matched version string
-    value: ${{ steps.semver.outputs.version }}
+    value: ${{ fromJSON(steps.semver.outputs.result).version }}
   major:
     description: Semver major version
-    value: ${{ steps.semver.outputs.major }}
+    value: ${{ fromJSON(steps.semver.outputs.result).major }}
   minor:
     description: Semver minor version
-    value: ${{ steps.semver.outputs.minor }}
+    value: ${{ fromJSON(steps.semver.outputs.result).minor }}
   patch:
     description: Semver patch version
-    value: ${{ steps.semver.outputs.patch }}
+    value: ${{ fromJSON(steps.semver.outputs.result).patch }}
   prerelease:
     description: Semver prerelease version
-    value: ${{ steps.semver.outputs.prerelease }}
+    value: ${{ fromJSON(steps.semver.outputs.result).prerelease }}
   build:
     description: Semver build version
-    value: ${{ steps.semver.outputs.build }}
+    value: ${{ fromJSON(steps.semver.outputs.result).build }}
   json:
-    description: Semver build version
-    value: ${{ steps.semver.outputs.json }}
+    description: Semver version as JSON
+    value: ${{ steps.semver.outputs.result }}
 runs:
   using: composite
   steps:
-  - shell: python
-    id: semver
-    run: |
-      from __future__ import print_function
-      import re
-      import os
-      import json
+  - id: semver
+    uses: actions/github-script@v7
+    env:
+      INPUT_VALUE: ${{ inputs.value }}
+    with:
+      script: |-
+        const {
+          // REF: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+          INPUT_PATTERN: pattern = /^v?(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/,
+          INPUT_VALUE: value,
+        } = process.env
 
-      input = '${{ inputs.input }}'
-      pattern = re.compile('${{ inputs.pattern }}')
-      matched = pattern.match(input)
+        const match = pattern.exec(value).groups
+        const results = {
+          version: value,
+          major: parseInt(match.major || 0),
+          minor: parseInt(match.minor || 0),
+          patch: parseInt(match.patch || 0),
+          prerelease: match.prerelease,
+          build: match.buildmetadata,
+        }
 
-      if matched:
-          groupdict = matched.groupdict()
-
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as fp:
-              print('json={}'.format(json.dumps(groupdict)), file=fp)
-              print('version={}'.format(matched.string), file=fp)
-
-              for key, value in groupdict.items():
-                  if not value:
-                      continue
-
-                  print('{key}={value}'.format(key=key, value=value), file=fp)
-  - shell: bash
-    run: |
-      echo "::group::Output"
-      yq e -P <<< '${{ steps.semver.outputs.json }}'
-      echo "::endgroup::"
+        core.group('Output', () => core.info(JSON.stringify(results)))
+        return results
