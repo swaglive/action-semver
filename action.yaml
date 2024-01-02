@@ -38,7 +38,8 @@ runs:
       script: |-
         const {
           // REF: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-          INPUT_PATTERN: pattern = /^v?(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/,
+          // Support 0-padded versions `0|[1-9]\d*` -> `0*|\d+`
+          INPUT_PATTERN: pattern = /^v?(?<major>0*|\d+)\.(?<minor>0*|\d+)\.(?<patch>0*|\d+)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/,
           INPUT_VALUE: value,
         } = process.env
 
