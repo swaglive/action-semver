@@ -47,7 +47,12 @@ runs:
           INPUT_VALUE: value,
         } = process.env
 
-        const match = pattern.exec(value).groups
+        const match = pattern.exec(value)?.groups
+
+        if (!match) {
+          return core.setFailed(`Value "${value}" does not match pattern "${pattern}"`)
+        }
+
         const results = {
           version: value,
           major: parseInt(match.major || 0),
