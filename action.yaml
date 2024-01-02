@@ -47,19 +47,19 @@ runs:
           INPUT_VALUE: value,
         } = process.env
 
-        const match = pattern.exec(value)?.groups
+        const match = pattern.exec(value)
 
         if (!match) {
           return core.setFailed(`Value "${value}" does not match pattern "${pattern}"`)
         }
 
         const results = {
-          version: value,
-          major: parseInt(match.major || 0),
-          minor: parseInt(match.minor || 0),
-          patch: parseInt(match.patch || 0),
-          prerelease: match.prerelease,
-          build: match.buildmetadata,
+          version: match.input,
+          major: parseInt(match.groups.major || 0),
+          minor: parseInt(match.groups.minor || 0),
+          patch: parseInt(match.groups.patch || 0),
+          prerelease: match.groups.prerelease,
+          build: match.groups.buildmetadata,
         }
 
         core.group('Output', () => {
