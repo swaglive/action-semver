@@ -1,5 +1,8 @@
 name: Semver
 description: Generate semver
+branding:
+  icon: at-sign
+  color: blue
 inputs:
   value:
     description: Value to match the pattern on
