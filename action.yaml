@@ -39,6 +39,7 @@ runs:
       INPUT_VALUE: ${{ inputs.value }}
     with:
       script: |-
+        const util = require('util')
         const {
           // REF: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
           // Support 0-padded versions `0|[1-9]\d*` -> `0*|\d+`
@@ -56,5 +57,5 @@ runs:
           build: match.buildmetadata,
         }
 
-        core.group('Output', () => core.info(JSON.stringify(results)))
+        core.group('Output', () => core.info(util.inspect(results)))
         return results
