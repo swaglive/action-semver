@@ -57,5 +57,8 @@ runs:
           build: match.buildmetadata,
         }
 
-        core.group('Output', () => core.info(util.inspect(results)))
+        core.group('Output', () => {
+          core.info(util.inspect(results, { colors: true }))
+        })
+
         return results
