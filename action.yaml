@@ -8,62 +8,44 @@ inputs:
     description: Value to match the pattern on
     required: true
     default: ${{ github.ref_name }}
+  identifier:
+    description: Identifier to be used to prefix premajor, preminor, prepatch or prerelease version increments.
+    required: false
+  identifier-base:
+    description: Base number to be used for the prerelease identifier.
+        Can be either 0 or 1, or false to omit the number altogether.
+        Defaults to 0.
+    required: false
 outputs:
   version:
     description: The full matched version string
-    value: ${{ fromJSON(steps.semver.outputs.result).version }}
+  next.premajor:
+    description: Next premajor version
+  next.preminor:
+    description: Next preminor version
+  next.prepatch:
+    description: Next prepatch version
+  next.major:
+    description: Next major version
+  next.minor:
+    description: Next minor version
+  next.patch:
+    description: Next patch version
+  next.prerelease:
+    description: Next prerelease version
   major:
-    description: Semver major version
-    value: ${{ fromJSON(steps.semver.outputs.result).major }}
+    description: Parsed Major version
   minor:
-    description: Semver minor version
-    value: ${{ fromJSON(steps.semver.outputs.result).minor }}
+    description: Parsed minor version
   patch:
-    description: Semver patch version
-    value: ${{ fromJSON(steps.semver.outputs.result).patch }}
+    description: Parsed patch version
   prerelease:
-    description: Semver prerelease version
-    value: ${{ fromJSON(steps.semver.outputs.result).prerelease }}
+    description: Parsed prerelease version
   build:
-    description: Semver build version
-    value: ${{ fromJSON(steps.semver.outputs.result).build }}
+    description: Parsed build version
   json:
-    description: Semver version as JSON
+    description: Parsed version as JSON
     value: ${{ steps.semver.outputs.result }}
 runs:
-  using: composite
-  steps:
-  - id: semver
-    uses: actions/github-script@v7
-    env:
-      INPUT_VALUE: ${{ inputs.value }}
-    with:
-      script: |-
-        const util = require('util')
-        const {
-          // REF: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-          // Support 0-padded versions `0|[1-9]\d*` -> `0*|\d+`
-          INPUT_PATTERN: pattern = /^v?(?<major>0*|\d+)\.(?<minor>0*|\d+)\.(?<patch>0*|\d+)(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/,
-          INPUT_VALUE: value,
-        } = process.env
-
-        const match = pattern.exec(value)
-
-        if (!match) {
-          return core.setFailed(`Value "${value}" does not match pattern "${pattern}"`)
-        }
-
-        const results = {
-          version: match.input,
-          major: parseInt(match.groups.major || 0),
-          minor: parseInt(match.groups.minor || 0),
-          patch: parseInt(match.groups.patch || 0),
-          prerelease: match.groups.prerelease,
-          build: match.groups.buildmetadata,
-        }
-
-        core.group('Output', () => {
-          core.info(util.inspect(results, { colors: true }))
-        })
-
-        return results
+  using: node20
+  main: dist/index.js
