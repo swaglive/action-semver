@@ -12,6 +12,7 @@ class SemVer extends semver.SemVer {
     minor: number
     patch: number
     prerelease: readonly (string | number)[]
+    isPrelease: boolean
     build: readonly (string | number)[]
   } {
     return {
@@ -20,6 +21,7 @@ class SemVer extends semver.SemVer {
       minor: this.minor,
       patch: this.patch,
       prerelease: this.prerelease,
+      isPrelease: this.prerelease.length > 0,
       build: this.build
     }
   }
