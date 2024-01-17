@@ -74,6 +74,7 @@ export async function run(): Promise<void> {
       major: SemVer
       minor: SemVer
       patch: SemVer
+      pre: SemVer
       prerelease: SemVer
     }
   } = {
@@ -97,6 +98,8 @@ export async function run(): Promise<void> {
       // @ts-expect-error: 3rd parameter is valid
       patch: version.clone().inc('patch', identifier, identifierBase),
       // @ts-expect-error: 3rd parameter is valid
+      pre: version.clone().inc('pre', identifier, identifierBase),
+      // @ts-expect-error: 3rd parameter is valid
       prerelease: version.clone().inc('prerelease', identifier, identifierBase)
     }
   }
@@ -113,6 +116,7 @@ export async function run(): Promise<void> {
   core.setOutput('next.major', results.next.major.version)
   core.setOutput('next.minor', results.next.minor.version)
   core.setOutput('next.patch', results.next.patch.version)
+  core.setOutput('next.pre', results.next.pre.version)
   core.setOutput('next.prerelease', results.next.prerelease.version)
   core.setOutput('json', results)
 
