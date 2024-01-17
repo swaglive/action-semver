@@ -1,0 +1,80 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    types:
+    - opened
+    - synchronize
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+    branches:
+    - main
+
+permissions:
+  contents: read
+
+jobs:
+  test-typescript:
+    name: TypeScript Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      id: checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      id: setup-node
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: .node-version
+        cache: npm
+
+    - name: Install Dependencies
+      id: npm-ci
+      run: npm ci
+
+    - name: Check Format
+      id: npm-format-check
+      run: npm run format:check
+
+    - name: Lint
+      id: npm-lint
+      run: npm run lint
+
+    - name: Test
+      id: npm-ci-test
+      run: npm run ci-test
+
+  test-action:
+    name: GitHub Actions Test
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      discussions: write
+
+    steps:
+    - name: Checkout
+      id: checkout
+      uses: actions/checkout@v4
+
+    - name: Test Local Action
+      uses: ./
+      with:
+        value: v1.2.3
+        identifier: alpha
+
+    - name: Test Local Action
+      uses: ./
+      with:
+        value: v1.2.3-beta.0
+        identifier: beta
+    
+    - name: Test Local Action
+      uses: ./
+      with:
+        value: v1.2.3-beta.0
+        identifier: beta
+        identifier-base: false
