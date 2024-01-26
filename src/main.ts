@@ -7,7 +7,7 @@ class SemVer extends semver.SemVer {
     return new SemVer(this.version)
   }
 
-  isPrelease(): boolean {
+  isPrerelease(): boolean {
     return this.prerelease.length > 0
   }
 
@@ -17,7 +17,7 @@ class SemVer extends semver.SemVer {
     minor: number
     patch: number
     prerelease: readonly (string | number)[]
-    isPrelease: boolean
+    isPrerelease: boolean
     build: readonly (string | number)[]
   } {
     return {
@@ -26,7 +26,7 @@ class SemVer extends semver.SemVer {
       minor: this.minor,
       patch: this.patch,
       prerelease: this.prerelease,
-      isPrelease: this.isPrelease(),
+      isPrerelease: this.isPrerelease(),
       build: this.build
     }
   }
@@ -71,7 +71,7 @@ export async function run(): Promise<void> {
     minor: number
     patch: number
     prerelease: readonly (string | number)[]
-    isPrelease: boolean
+    isPrerelease: boolean
     build: readonly (string | number)[]
     next: {
       premajor: SemVer
@@ -89,7 +89,7 @@ export async function run(): Promise<void> {
     minor: version.minor,
     patch: version.patch,
     prerelease: version.prerelease,
-    isPrelease: version.isPrelease(),
+    isPrerelease: version.isPrerelease(),
     build: version.build,
     next: {
       // @ts-expect-error: 3rd parameter is valid
@@ -116,7 +116,7 @@ export async function run(): Promise<void> {
   core.setOutput('minor', results.minor)
   core.setOutput('patch', results.patch)
   core.setOutput('prerelease', results.prerelease)
-  core.setOutput('isPrelease', results.isPrelease)
+  core.setOutput('isPrerelease', results.isPrerelease)
   core.setOutput('build', results.build)
   core.setOutput('next.premajor', results.next.premajor.version)
   core.setOutput('next.preminor', results.next.preminor.version)
