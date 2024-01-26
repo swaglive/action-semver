@@ -41,6 +41,8 @@ outputs:
     description: Parsed patch version
   prerelease:
     description: Parsed prerelease version
+  isPrelease:
+    description: Is the version a prerelease
   build:
     description: Parsed build version
   json:
