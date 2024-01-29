@@ -28005,7 +28005,7 @@ class SemVer extends semver.SemVer {
     clone() {
         return new SemVer(this.version);
     }
-    isPrelease() {
+    isPrerelease() {
         return this.prerelease.length > 0;
     }
     toJSON() {
@@ -28015,7 +28015,7 @@ class SemVer extends semver.SemVer {
             minor: this.minor,
             patch: this.patch,
             prerelease: this.prerelease,
-            isPrelease: this.isPrelease(),
+            isPrerelease: this.isPrerelease(),
             build: this.build
         };
     }
@@ -28054,7 +28054,7 @@ async function run() {
         minor: version.minor,
         patch: version.patch,
         prerelease: version.prerelease,
-        isPrelease: version.isPrelease(),
+        isPrerelease: version.isPrerelease(),
         build: version.build,
         next: {
             // @ts-expect-error: 3rd parameter is valid
@@ -28080,7 +28080,7 @@ async function run() {
     core.setOutput('minor', results.minor);
     core.setOutput('patch', results.patch);
     core.setOutput('prerelease', results.prerelease);
-    core.setOutput('isPrelease', results.isPrelease);
+    core.setOutput('isPrerelease', results.isPrerelease);
     core.setOutput('build', results.build);
     core.setOutput('next.premajor', results.next.premajor.version);
     core.setOutput('next.preminor', results.next.preminor.version);
