@@ -18,7 +18,9 @@ inputs:
     required: false
 outputs:
   version:
-    description: The full matched version string
+    description: Parsed version string
+  raw:
+    description: Raw input version string
   next.premajor:
     description: Next premajor version
   next.preminor:

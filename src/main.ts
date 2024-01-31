@@ -13,6 +13,7 @@ class SemVer extends semver.SemVer {
 
   toJSON(): {
     version: string
+    raw: string
     major: number
     minor: number
     patch: number
@@ -22,6 +23,7 @@ class SemVer extends semver.SemVer {
   } {
     return {
       version: this.version,
+      raw: this.version,
       major: this.major,
       minor: this.minor,
       patch: this.patch,
@@ -58,6 +60,7 @@ export async function run(): Promise<void> {
   const version = new SemVer(parsedVersion.raw, parsedVersion.options)
   const results: {
     version: string
+    raw: string
     major: number
     minor: number
     patch: number
@@ -76,6 +79,7 @@ export async function run(): Promise<void> {
     }
   } = {
     version: version.version,
+    raw: version.raw,
     major: version.major,
     minor: version.minor,
     patch: version.patch,
@@ -103,6 +107,7 @@ export async function run(): Promise<void> {
   }
 
   core.setOutput('version', results.version)
+  core.setOutput('raw', results.raw)
   core.setOutput('major', results.major)
   core.setOutput('minor', results.minor)
   core.setOutput('patch', results.patch)
