@@ -4,7 +4,7 @@ import * as semver from 'semver'
 
 class SemVer extends semver.SemVer {
   clone(): SemVer {
-    return new SemVer(this.version)
+    return new SemVer(this.version, this.options)
   }
 
   isPrerelease(): boolean {
@@ -32,16 +32,12 @@ class SemVer extends semver.SemVer {
   }
 }
 
-// REF: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-// Support 0-padded versions `0|[1-9]\d*` -> `0*|\d+`
-const PATTERN = /^v?(?<major>\d+)(\.(?<minor>\d+)(\.(?<patch>\d+))?)?/
-
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 export async function run(): Promise<void> {
-  let value: string = core.getInput('value', { required: true })
+  const value: string = core.getInput('value', { required: true })
   const identifier: string = core.getInput('identifier')
   let identifierBase: string | boolean = core.getInput('identifier-base')
 
@@ -51,20 +47,15 @@ export async function run(): Promise<void> {
     /**/
   }
 
-  // HACK: Support "coerce"
-  // DEPRECATED: Use https://github.com/npm/node-semver/pull/671
-  value = value.replace(PATTERN, (...args) => {
-    const { major, minor, patch } = args[args.length - 1]
-    return `${Number(major || 0)}.${Number(minor || 0)}.${Number(patch || 0)}`
+  const parsedVersion: semver.SemVer | null = semver.parse(value, {
+    loose: true
   })
-
-  const parsedVersion: semver.SemVer | null = semver.parse(value)
 
   if (!parsedVersion) {
     return core.setFailed(`Value "${value}" is not a valid semver version`)
   }
 
-  const version = new SemVer(parsedVersion.raw)
+  const version = new SemVer(parsedVersion.raw, parsedVersion.options)
   const results: {
     version: string
     major: number
