@@ -28003,7 +28003,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const semver = __importStar(__nccwpck_require__(1383));
 class SemVer extends semver.SemVer {
     clone() {
-        return new SemVer(this.version);
+        return new SemVer(this.version, this.options);
     }
     isPrerelease() {
         return this.prerelease.length > 0;
@@ -28020,15 +28020,12 @@ class SemVer extends semver.SemVer {
         };
     }
 }
-// REF: https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-// Support 0-padded versions `0|[1-9]\d*` -> `0*|\d+`
-const PATTERN = /^v?(?<major>\d+)(\.(?<minor>\d+)(\.(?<patch>\d+))?)?/;
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
  */
 async function run() {
-    let value = core.getInput('value', { required: true });
+    const value = core.getInput('value', { required: true });
     const identifier = core.getInput('identifier');
     let identifierBase = core.getInput('identifier-base');
     try {
@@ -28037,17 +28034,13 @@ async function run() {
     catch (error) {
         /**/
     }
-    // HACK: Support "coerce"
-    // DEPRECATED: Use https://github.com/npm/node-semver/pull/671
-    value = value.replace(PATTERN, (...args) => {
-        const { major, minor, patch } = args[args.length - 1];
-        return `${Number(major || 0)}.${Number(minor || 0)}.${Number(patch || 0)}`;
+    const parsedVersion = semver.parse(value, {
+        loose: true
     });
-    const parsedVersion = semver.parse(value);
     if (!parsedVersion) {
         return core.setFailed(`Value "${value}" is not a valid semver version`);
     }
-    const version = new SemVer(parsedVersion.raw);
+    const version = new SemVer(parsedVersion.raw, parsedVersion.options);
     const results = {
         version: version.version,
         major: version.major,
