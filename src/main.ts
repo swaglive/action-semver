@@ -8,7 +8,12 @@ class SemVer extends semver.SemVer {
   }
 
   inc(release: semver.ReleaseType, identifier?: string): SemVer {
+    const raw = this.raw
     const version = super.inc(release, identifier)
+
+    // HACK: Preserve the "v" prefix if it exists
+    if (raw.startsWith('v')) version.raw = `v${version.raw}`
+
     return new SemVer(version.raw, version.options)
   }
 
