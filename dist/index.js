@@ -28005,6 +28005,10 @@ class SemVer extends semver.SemVer {
     clone() {
         return new SemVer(this.raw, this.options);
     }
+    inc(release, identifier) {
+        const version = super.inc(release, identifier);
+        return new SemVer(version.raw, version.options);
+    }
     isPrerelease() {
         return this.prerelease.length > 0;
     }
