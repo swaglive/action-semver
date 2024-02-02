@@ -23,7 +23,7 @@ class SemVer extends semver.SemVer {
   } {
     return {
       version: this.version,
-      raw: this.version,
+      raw: this.raw,
       major: this.major,
       minor: this.minor,
       patch: this.patch,
