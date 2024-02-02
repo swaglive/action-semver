@@ -7,6 +7,11 @@ class SemVer extends semver.SemVer {
     return new SemVer(this.raw, this.options)
   }
 
+  inc(release: semver.ReleaseType, identifier?: string): SemVer {
+    const version = super.inc(release, identifier)
+    return new SemVer(version.raw, version.options)
+  }
+
   isPrerelease(): boolean {
     return this.prerelease.length > 0
   }
