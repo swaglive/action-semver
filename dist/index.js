@@ -28003,7 +28003,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const semver = __importStar(__nccwpck_require__(1383));
 class SemVer extends semver.SemVer {
     clone() {
-        return new SemVer(this.version, this.options);
+        return new SemVer(this.raw, this.options);
     }
     isPrerelease() {
         return this.prerelease.length > 0;
