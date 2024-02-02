@@ -4,7 +4,7 @@ import * as semver from 'semver'
 
 class SemVer extends semver.SemVer {
   clone(): SemVer {
-    return new SemVer(this.version, this.options)
+    return new SemVer(this.raw, this.options)
   }
 
   isPrerelease(): boolean {
