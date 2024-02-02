@@ -28011,7 +28011,7 @@ class SemVer extends semver.SemVer {
     toJSON() {
         return {
             version: this.version,
-            raw: this.version,
+            raw: this.raw,
             major: this.major,
             minor: this.minor,
             patch: this.patch,
