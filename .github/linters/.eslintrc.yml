@@ -9,9 +9,10 @@ globals:
 
 ignorePatterns:
   - '!.*'
-  - '**/node_modules/.*'
-  - '**/dist/.*'
-  - '**/coverage/.*'
+  - '**/node_modules/**'
+  - '**/dist/**'
+  - '**/coverage/**'
+  - '**/lib/**'
   - '*.json'
 
 parser: '@typescript-eslint/parser'
@@ -20,8 +21,8 @@ parserOptions:
   ecmaVersion: 2023
   sourceType: module
   project:
-    - './.github/linters/tsconfig.json'
     - './tsconfig.json'
+    - './__tests__/tsconfig.json'
 
 plugins:
   - jest
