@@ -56,7 +56,7 @@ export async function run(): Promise<void> {
   try {
     identifierBase = core.getBooleanInput('identifier-base')
   } catch (error) {
-    /**/
+    core.debug(`Failed to parse identifier-base as boolean: ${error}`)
   }
 
   const parsedVersion: semver.SemVer | null = semver.parse(value, {

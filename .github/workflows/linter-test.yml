@@ -1,10 +1,11 @@
-name: Lint Codebase
+name: Lint Codebase Test
 
 on:
   pull_request:
   push:
     branches:
-      - main
+      # - main
+      - feature/linter-v8-test
 
 permissions:
   contents: read
@@ -36,7 +37,8 @@ jobs:
         id: super-linter
         uses: super-linter/super-linter/slim@v8
         env:
-          DEFAULT_BRANCH: main
+          # DEFAULT_BRANCH: main
+          DEFAULT_BRANCH: feature/linter-v8-test
           FILTER_REGEX_EXCLUDE: dist/**/*
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TYPESCRIPT_DEFAULT_STYLE: prettier

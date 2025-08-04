@@ -55,6 +55,11 @@
     "transform": {
       "^.+\\.ts$": "ts-jest"
     },
+    "moduleNameMapper": {
+      "^../src/main\\.js$": "<rootDir>/src/main.ts",
+      "^./main\\.js$": "<rootDir>/src/main.ts",
+      "^../src/index\\.js$": "<rootDir>/src/index.ts"
+    },
     "coverageReporters": [
       "json-summary",
       "text",
@@ -72,6 +77,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^20.12.7",
+    "@types/semver": "^7.7.0",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
     "@vercel/ncc": "^0.38.3",
