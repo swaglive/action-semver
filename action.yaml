@@ -9,7 +9,9 @@ inputs:
     required: true
     default: ${{ github.ref_name }}
   identifier:
-    description: Identifier to be used to prefix premajor, preminor, prepatch or prerelease version increments.
+    description: >
+      Identifier to be used to prefix premajor, preminor, prepatch or
+      prerelease version increments.
     required: false
   identifier-base:
     description: Base number to be used for the prerelease identifier.
